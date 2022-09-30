@@ -130,8 +130,8 @@ class App extends React.Component {
         if (this.state.currentList) {
             newCurrentList = this.state.currentList;
         }
-        if (key >= 0) {
-            newCurrentList.songs.splice(key, 1);
+        if (key >= 1) {
+            newCurrentList.songs.splice(key-1, 1);
         }
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
