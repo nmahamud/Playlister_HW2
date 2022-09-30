@@ -401,6 +401,13 @@ class App extends React.Component {
         let modal = document.getElementById("edit-song-modal");
         modal.classList.remove("is-visible");
     }
+
+    componentDidMount() {
+        document.addEventListener("keydown",(e) => {
+            if (e.ctrlKey && e.key === 'z') {this.undo()}
+            if (e.ctrlKey && e.key === 'y') {this.redo()}
+        })
+    }
     render() {
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
