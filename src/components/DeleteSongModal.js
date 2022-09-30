@@ -5,7 +5,7 @@ export default class DeleteSongModal extends Component {
         const { song, songNum, deleteSongCallback, hideDeleteSongModalCallback } = this.props;
         let name = "";
         if (song) {
-            name = song.title;
+            name = song.song.title;
         }
         return (
             <div 
@@ -18,7 +18,7 @@ export default class DeleteSongModal extends Component {
                         </div>
                         <div class="modal-center">
                             <div class="modal-center-content">
-                                Are you sure you wish to permantently remove the {name} from the playlist?
+                                Are you sure you wish to permantently remove <b>{name}</b> from the playlist?
                             </div>
                         </div>
                         <div class="modal-south">

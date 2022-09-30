@@ -19,6 +19,7 @@ import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
 import DeleteSongModal from './components/DeleteSongModal';
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -156,7 +157,8 @@ class App extends React.Component {
         }
     }
     deleteMarkedSong = () => {
-        this.deleteSong(this.state.songKeyMark);
+        let transaction = new DeleteSong_Transaction(this, this.state.songKeyMark, this.state.currentList.songs[this.state.songKeyMark]);
+        this.tps.addTransaction(transaction);
         this.hideDeleteSongModal();
     }
     renameList = (key, newName) => {
