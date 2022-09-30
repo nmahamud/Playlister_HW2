@@ -6,14 +6,17 @@ import jsTPS_Transaction from "../common/jsTPS.js"
  * a song. It will be managed by the transaction stack.
  * 
  * @author McKilla Gorilla
- * @author ?
+ * @author Nazif Mahamud
  */
 export default class DeleteSong_Transaction extends jsTPS_Transaction {
     constructor(initApp, initIndex, songInfo) {
         super();
         this.app = initApp;
         this.index = initIndex;
-        this.songInfo = songInfo;
+        this.songTitle = songInfo.title;
+        this.songArtist = songInfo.artist;
+        this.songID = songInfo.youTubeId
+        this.song = { title:this.songTitle, artist:this.songArtist, youTubeId:this.songID }
     }
 
     doTransaction() {
@@ -21,6 +24,6 @@ export default class DeleteSong_Transaction extends jsTPS_Transaction {
     }
     
     undoTransaction() {
-        this.app.moveSong(this.newSongIndex, this.oldSongIndex);
+        this.app.addSongAtIndex(this.index, this.song)
     }
 }
