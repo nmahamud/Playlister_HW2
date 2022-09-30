@@ -140,17 +140,18 @@ class App extends React.Component {
         else {
             newCurrentList.songs.splice(newCurrentList.songs.length-1, 1);
         }
-        this.setState(prevState => ({
-            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            currentList : newCurrentList,
-            song : null,
-            songKeyMark : null,
-            sessionData: {
-                nextKey : prevState.sessionData.nextKey,
-                counter: prevState.sessionData.counter,
-                keyNamePairs: prevState.sessionData.keyNamePairs
-            }
-        }))
+        // this.setState(prevState => ({
+        //     listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+        //     currentList : newCurrentList,
+        //     song : null,
+        //     songKeyMark : null,
+        //     sessionData: {
+        //         nextKey : prevState.sessionData.nextKey,
+        //         counter: prevState.sessionData.counter,
+        //         keyNamePairs: prevState.sessionData.keyNamePairs
+        //     }
+        // }))
+        this.setStateWithUpdatedList(newCurrentList);
     }
     addSong = () => {
         let newCurrentList = null;
@@ -159,17 +160,10 @@ class App extends React.Component {
         }
         let newSong = {title: 'Untitled', artist: 'Unknown', youTubeId: 'dQw4w9WgXcQ'};
         newCurrentList.songs.push(newSong);
-        this.setState(prevState => ({
-            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            currentList : newCurrentList,
-            song : prevState.song,
-            songKeyMark : prevState.songKeyMark,
-            sessionData: {
-                nextKey : prevState.sessionData.nextKey,
-                counter: prevState.sessionData.counter,
-                keyNamePairs: prevState.sessionData.keyNamePairs
-            }
-        }))
+        // this.setState(prevState => ({
+        //     currentList : newCurrentList
+        // }))
+        this.setStateWithUpdatedList(newCurrentList);
     }
     addSongAtIndex = (index, info) => {
         let newCurrentList = null;
@@ -177,17 +171,7 @@ class App extends React.Component {
             newCurrentList = this.state.currentList;
         }
         newCurrentList.songs.splice(index-1, 0, info);
-        this.setState(prevState => ({
-            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            currentList : newCurrentList,
-            song : prevState.song,
-            songKeyMark : prevState.songKeyMark,
-            sessionData: {
-                nextKey : prevState.sessionData.nextKey,
-                counter: prevState.sessionData.counter,
-                keyNamePairs: prevState.sessionData.keyNamePairs
-            }
-        }))
+        this.setStateWithUpdatedList(newCurrentList);
     }
     editSong = (index, newSongTitle, newSongArtist, newSongID) => {
         let newCurrentList = null;
@@ -197,17 +181,18 @@ class App extends React.Component {
         newCurrentList.songs[index-1].title = newSongTitle;
         newCurrentList.songs[index-1].artist = newSongArtist;
         newCurrentList.songs[index-1].youTubeId = newSongID;
-        this.setState(prevState => ({
-            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-            currentList : newCurrentList,
-            song : prevState.song,
-            songKeyMark : prevState.songKeyMark,
-            sessionData: {
-                nextKey : prevState.sessionData.nextKey,
-                counter: prevState.sessionData.counter,
-                keyNamePairs: prevState.sessionData.keyNamePairs
-            }
-        }))
+        // this.setState(prevState => ({
+        //     listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+        //     currentList : newCurrentList,
+        //     song : prevState.song,
+        //     songKeyMark : prevState.songKeyMark,
+        //     sessionData: {
+        //         nextKey : prevState.sessionData.nextKey,
+        //         counter: prevState.sessionData.counter,
+        //         keyNamePairs: prevState.sessionData.keyNamePairs
+        //     }
+        // }))
+        this.setStateWithUpdatedList(newCurrentList);
     }
     deleteMarkedList = () => {
         this.deleteList(this.state.listKeyPairMarkedForDeletion.key);
