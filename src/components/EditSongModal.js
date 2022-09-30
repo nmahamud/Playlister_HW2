@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 
 export default class EditSongModal extends Component {
     render() {
-        const { editSongCallback, hideEditSongModalCallback } = this.props;
-        // let name = "";
-        // if (song) {
-        //     name = song.song.title;
-        // }
+        const { song, editSongCallback, hideEditSongModalCallback } = this.props;
+        let title = "";
+        let artist = "";
+        let id = "";
+        if (song) {
+            title = song.song.title;
+            artist = song.song.artist;
+            id = song.song.youTubeId;
+        }
         return (
             <div 
                 class="modal" 
@@ -17,11 +21,9 @@ export default class EditSongModal extends Component {
                             Edit song
                         </div>
                         <div class="modal-center">
-                            <div class="modal-center-content">
-                                <label for="title-input">Title: </label> <input type="text" id="title-input" class="modal-text" /> {'\n'}
-                                <label for="artist-input">Artist: </label> <input type="text" id="artist-input" class="modal-text" /> {'\n'}
-                                <label for="youtube-input">YouTube Id: </label> <input type="text" id="youtube-input" class="modal-text" />
-                            </div>
+                            <span id="title-prompt" class="modal-prompt">Title: </span> <input type="text" defaultValue={title} id="title-input" class="modal-textfield" /> 
+                            <span id="artist-prompt" class="modal-prompt">Artist: </span> <input type="text" defaultValue={artist} id="artist-input" class="modal-textfield" />
+                            <span id="you-tube-id-prompt" class="modal-prompt">You Tube Id: </span> <input type="text" defaultValue={id} id="youtube-input" class="modal-textfield" />
                         </div>
                         <div class="modal-south">
                             <input type="button" 
