@@ -18,6 +18,7 @@ import PlaylistCards from './components/PlaylistCards.js';
 import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
+import DeleteSongModal from './components/DeleteSongModal';
 
 class App extends React.Component {
     constructor(props) {
@@ -124,6 +125,26 @@ class App extends React.Component {
             this.db.mutationUpdateSessionData(this.state.sessionData);
         });
     }
+    deleteSong = (key) => {
+        let newCurrentList = null;
+        if (this.state.currentList) {
+            newCurrentList = this.state.currentList;
+        }
+        if (key >= 0) {
+            newCurrentList.songs.splice(key, 1);
+        }
+        this.setState(prevState => ({
+            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+            currentList : newCurrentList,
+            song : null,
+            songKeyMark : null,
+            sessionData: {
+                nextKey : prevState.sessionData.nextKey,
+                counter: prevState.sessionData.counter,
+                keyNamePairs: prevState.sessionData.keyNamePairs
+            }
+        }))
+    }
     deleteMarkedList = () => {
         this.deleteList(this.state.listKeyPairMarkedForDeletion.key);
         this.hideDeleteListModal();
@@ -133,6 +154,10 @@ class App extends React.Component {
         if (this.state.currentList) {
             this.deleteList(this.state.currentList.key);
         }
+    }
+    deleteMarkedSong = () => {
+        this.deleteSong(this.state.songKeyMark);
+        this.hideDeleteSongModal();
     }
     renameList = (key, newName) => {
         let newKeyNamePairs = [...this.state.sessionData.keyNamePairs];
@@ -263,6 +288,16 @@ class App extends React.Component {
             this.showDeleteListModal();
         });
     }
+    markSongForDeletion = (key, song) => {
+        this.setState(prevState => ({
+            currentList : prevState.currentList,
+            songKeyMark : key,
+            song : song,
+            sessionData : prevState.sessionData
+        }), () => {
+            this.showDeleteSongModal();
+        })
+    }
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
@@ -272,6 +307,16 @@ class App extends React.Component {
     // THIS FUNCTION IS FOR HIDING THE MODAL
     hideDeleteListModal() {
         let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+    }
+    // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
+    showDeleteSongModal() {
+        let modal = document.getElementById("delete-song-modal");
+        modal.classList.add("is-visible");
+    }
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    hideDeleteSongModal() {
+        let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
     render() {
@@ -303,13 +348,20 @@ class App extends React.Component {
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
-                    moveSongCallback={this.addMoveSongTransaction} />
+                    moveSongCallback={this.addMoveSongTransaction} 
+                    deleteSongCallback={this.markSongForDeletion} />
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteListModal
                     listKeyPair={this.state.listKeyPairMarkedForDeletion}
                     hideDeleteListModalCallback={this.hideDeleteListModal}
                     deleteListCallback={this.deleteMarkedList}
+                />
+                <DeleteSongModal
+                    song = {this.state.song}
+                    songName={this.state.songKeyMark}
+                    hideDeleteSongModalCallback={this.hideDeleteSongModal}
+                    deleteSongCallback={this.deleteMarkedSong}
                 />
             </div>
         );
