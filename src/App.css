@@ -109,7 +109,7 @@ body {
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
-  font-size: 18pt;
+  font-size: 32pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -135,6 +135,23 @@ body {
   font-size:18pt;
 }
 
+.toolbar-button {
+  font-size:36pt;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 2px 4px #888888;
+  border-radius: 5px;
+}
+
+.disabled {
+  background-color: lightgray;
+}
+
+.disabled:hover {
+  color: var(--swatch-neutral);
+}
+
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
   border-width: 0px;
@@ -153,12 +170,9 @@ body {
   cursor: not-allowed;
 }
 
+
 .playlister-song, .playlister-song-dragged-to { 
-  /* display:flex;
-  overflow: scroll; */
-  /* align-items: center; */
   font-size: 32pt;
-  /* height:20%; */
   background-color: var(--swatch-complement);
   border-radius: 25px;
   margin: 10px;

@@ -102,6 +102,9 @@ class App extends React.Component {
                 // DELETED SO WE'LL KEEP THE CURRENT LIST AS IT IS
                 newCurrentList = this.state.currentList;
             }
+            else {
+                this.tps.clearAllTransactions();
+            }
         }
 
         let keyIndex = this.state.sessionData.keyNamePairs.findIndex((keyNamePair) => {
@@ -140,17 +143,6 @@ class App extends React.Component {
         else {
             newCurrentList.songs.splice(newCurrentList.songs.length-1, 1);
         }
-        // this.setState(prevState => ({
-        //     listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-        //     currentList : newCurrentList,
-        //     song : null,
-        //     songKeyMark : null,
-        //     sessionData: {
-        //         nextKey : prevState.sessionData.nextKey,
-        //         counter: prevState.sessionData.counter,
-        //         keyNamePairs: prevState.sessionData.keyNamePairs
-        //     }
-        // }))
         this.setStateWithUpdatedList(newCurrentList);
     }
     addSong = () => {
@@ -160,9 +152,6 @@ class App extends React.Component {
         }
         let newSong = {title: 'Untitled', artist: 'Unknown', youTubeId: 'dQw4w9WgXcQ'};
         newCurrentList.songs.push(newSong);
-        // this.setState(prevState => ({
-        //     currentList : newCurrentList
-        // }))
         this.setStateWithUpdatedList(newCurrentList);
     }
     addSongAtIndex = (index, info) => {
@@ -181,17 +170,6 @@ class App extends React.Component {
         newCurrentList.songs[index-1].title = newSongTitle;
         newCurrentList.songs[index-1].artist = newSongArtist;
         newCurrentList.songs[index-1].youTubeId = newSongID;
-        // this.setState(prevState => ({
-        //     listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
-        //     currentList : newCurrentList,
-        //     song : prevState.song,
-        //     songKeyMark : prevState.songKeyMark,
-        //     sessionData: {
-        //         nextKey : prevState.sessionData.nextKey,
-        //         counter: prevState.sessionData.counter,
-        //         keyNamePairs: prevState.sessionData.keyNamePairs
-        //     }
-        // }))
         this.setStateWithUpdatedList(newCurrentList);
     }
     deleteMarkedList = () => {
@@ -256,28 +234,22 @@ class App extends React.Component {
     }
     // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
     loadList = (key) => {
+        this.tps.clearAllTransactions();
         let newCurrentList = this.db.queryGetList(key);
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: newCurrentList,
             sessionData: this.state.sessionData
-        }), () => {
-            // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
-            // THE TRANSACTION STACK IS CLEARED
-            this.tps.clearAllTransactions();
-        });
+        }));
     }
     // THIS FUNCTION BEGINS THE PROCESS OF CLOSING THE CURRENT LIST
     closeCurrentList = () => {
+        this.tps.clearAllTransactions();
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: null,
             sessionData: this.state.sessionData
-        }), () => {
-            // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
-            // THE TRANSACTION STACK IS CLEARED
-            this.tps.clearAllTransactions();
-        });
+        }));
     }
     setStateWithUpdatedList(list) {
         this.setState(prevState => ({
@@ -330,6 +302,7 @@ class App extends React.Component {
             // MAKE SURE THE LIST GETS PERMANENTLY UPDATED
             this.db.mutationUpdateList(this.state.currentList);
         }
+        this.forceUpdate()
     }
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING A REDO
     redo = () => {
@@ -339,6 +312,7 @@ class App extends React.Component {
             // MAKE SURE THE LIST GETS PERMANENTLY UPDATED
             this.db.mutationUpdateList(this.state.currentList);
         }
+        this.forceUpdate()
     }
     markListForDeletion = (keyPair) => {
         this.setState(prevState => ({
@@ -404,8 +378,8 @@ class App extends React.Component {
 
     componentDidMount() {
         document.addEventListener("keydown",(e) => {
-            if (e.ctrlKey && e.key === 'z') {this.undo()}
-            if (e.ctrlKey && e.key === 'y') {this.redo()}
+            if (e.ctrlKey && e.key === 'z' && !(document.getElementById("delete-list-modal").classList.contains("is-visible")) && !(document.getElementById("delete-song-modal").classList.contains("is-visible")) && !(document.getElementById("edit-song-modal").classList.contains("is-visible"))) {this.undo()}
+            if (e.ctrlKey && e.key === 'y' && !(document.getElementById("delete-list-modal").classList.contains("is-visible")) && !(document.getElementById("delete-song-modal").classList.contains("is-visible")) && !(document.getElementById("edit-song-modal").classList.contains("is-visible"))) {this.redo()}
         })
     }
     render() {
@@ -417,6 +391,7 @@ class App extends React.Component {
             <>
                 <Banner />
                 <SidebarHeading
+                    canAddSong={canAddSong}
                     createNewListCallback={this.createNewList}
                 />
                 <SidebarList
